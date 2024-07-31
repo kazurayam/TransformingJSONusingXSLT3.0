@@ -33,6 +33,7 @@ public class BooksTransformTest {
         assertThat(fixtureDir).exists();
         classOutputDir = too.cleanClassOutputDirectory();
     }
+
     @Test
     public void test_smoke() throws TransformerException {
         Path xml = fixtureDir.resolve("books.xml");
@@ -42,10 +43,15 @@ public class BooksTransformTest {
         Source xmlSource = new StreamSource(xml.toFile());
         // xslt
         Source xsltSource = new StreamSource(xslt.toFile());
+
+        // we use Saxon as Transformer
+        System.setProperty("javax.xml.transform.TransformerFactory",
+                "net.sf.saxon.jaxp.SaxonTransformerFactory");
         TransformerFactory transformerFactory =
                 TransformerFactory.newInstance();
         Transformer transformer =
                 transformerFactory.newTransformer(xsltSource);
+
         // output
         Result xmlResult = new StreamResult(html.toFile());
         // now perform transformation
